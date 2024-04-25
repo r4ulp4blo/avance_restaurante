@@ -1,0 +1,118 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1 class="text-center">Modulo Cocinero</h1>
+<br/>
+<form asp-action="Visualizar pedidos">
+
+    
+
+    @* <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre Plato</th>
+                <th>Id de Mesa</th>
+                <th>Estado</th>
+                <th>Cantidad</th>
+                <th>Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detallespedidos in (IEnumerable<dynamic>)ViewData["listadoDePedidos"])
+            {
+                <tr>
+                    <td>@detallespedidos.nombrePlato</td>
+                    <td>@detallespedidos.id_Mesa</td>
+                    <td>@detallespedidos.estado</td>
+                    <td>@detallespedidos.cantidadPlato</td>
+                    <td>@detallespedidos.Comentarios</td>
+                </tr>
+            }
+        </tbody>
+    </table> *@
+
+    @foreach (var detallesmesa in (IEnumerable<dynamic>)ViewData["listadoDeMesas"])
+    {
+        <div class="card mb-3">
+            <!-- Agrega la clase 'mb-3' para agregar margen inferior -->
+            <div class="card-body">
+                <h5 class="card-title">Mesa @detallesmesa.id_Mesa</h5>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Plato</th>
+                            <th>Comentario</th>
+                            <th>Cantidad</th>
+                            <th>Estado</th>
+                            <th>Cambiar Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pedidoPorMesa in (IEnumerable<dynamic>)ViewData["listadoDePedidosPorMesa"])
+                        {
+                            if (pedidoPorMesa.id_Mesa == detallesmesa.id_Mesa)
+                            {
+                                foreach (var detallepedido in pedidoPorMesa.Pedidos)
+                                {
+                                    <tr>
+                                        <td>@detallepedido.nombrePlato</td>
+                                        <td>@detallepedido.Comentarios</td>
+                                        <td>@detallepedido.cantidadPlato</td>
+                                        <td>@detallepedido.estado</td>
+                                        <td>
+                                            @if (detallepedido.estado == "Solicitado")
+                                            {
+                                                <button type="button" class="btn btn-primary" onclick="cambiarEstado('@detallepedido.id_Plato')">Cambiar Estado</button>
+                                            }
+                                            else if (detallepedido.estado == "Preparando")
+                                            {
+                                                <button type="button" class="btn btn-primary" onclick="cambiarEstado('@detallepedido.id_Plato')">Cambiar Estado</button>
+                                            }
+                                            else if (detallepedido.estado == "Finalizado")
+                                            {
+                                                <button type="button" class="btn btn-primary" onclick="cambiarEstado('@detallepedido.id_Plato')">Cambiar Estado</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+
+    <script>
+        function cambiarEstado(idPlato) {
+            // Aquí podrías enviar una solicitud al servidor para cambiar el estado del plato con el ID proporcionado
+            // Esto podría ser a través de una solicitud AJAX o un formulario POST
+            // Por ejemplo, podrías llamar a una acción en tu controlador para actualizar el estado del plato
+            // y luego actualizar la tabla con los nuevos datos
+
+            // Ejemplo de solicitud AJAX utilizando jQuery
+            $.ajax({
+                type: "POST",
+                url: "/plato/CambiarEstado", // Ruta de la acción en tu controlador
+                data: { id: idPlato },
+                success: function (response) {
+                    // Manejar la respuesta si es necesario
+                    // Por ejemplo, podrías actualizar la tabla con los nuevos datos del plato
+                },
+                error: function (xhr, status, error) {
+                    // Manejar errores si es necesario
+                }
+            });
+        }
+    </script>
+
+
+
+
+</form>

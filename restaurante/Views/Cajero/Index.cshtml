@@ -1,0 +1,98 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* <h1 class="text-center">Modulo Cocinero</h1>
+<br />
+<div class="w-25" >
+
+    
+    <form asp-action="Operar pedidos">
+        @foreach (var detallesmesa in (IEnumerable<dynamic>)ViewData["listadoDeMesas"])
+        {
+            <div class="card ">
+                <div class="card-body">
+                    <h5 class="card-title">Mesa @detallesmesa.id_Mesa</h5>
+                    <form method="post">
+                        <button type="submit" asp-action="Factura" asp-route-id="1">Enviar</button>
+
+                    </form>
+
+                </div>
+            </div>
+        } 
+
+    </form>
+    
+</div>
+
+<div class="w-75">
+    <div class="card bg-light">
+        <div class="card-body">
+            <h5 class="card-title">Detalles del Pedido</h5>
+            <p class="card-text" id="detalles-pedido">Selecciona una mesa para ver los detalles del pedido.</p>
+        </div>
+    </div>
+</div> *@
+
+<div class="w-100">
+    <h1 class="text-center">Modulo Cajero</h1>
+    <br />
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            
+            <div class="w-100">
+                <form asp-action="Operar pedidos">
+                    @foreach (var detallesmesa in (IEnumerable<dynamic>)ViewData["listadoDeMesas"])
+                    {
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Mesa @detallesmesa.id_Mesa</h5>
+                                <span>Total: <span id="total-amount">0.00</span></span>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th>Plato</th>
+                                        <th>Precio</th>
+                                    </thead>
+                                </table>
+                                <tbody>
+                                    @foreach (var pedidoPorMesa in (IEnumerable<dynamic>)ViewData["listadoDePedidosPorMesa"])
+                                    {
+                                        if (pedidoPorMesa.id_Mesa == detallesmesa.id_Mesa)
+                                        {
+                                            foreach (var detallepedido in pedidoPorMesa.Pedidos)
+                                            {
+                                                <tr>
+                                                    <td>@detallepedido.nombrePlato</td>
+                                                    <td>@detallepedido.precio</td>
+                                                </tr>
+                                            }
+                                        }
+                                    } 
+                                </tbody>
+                                <form method="post">
+                                    <button type="submit" asp-action="Factura" asp-route-id="1">Cerrar Cuenta</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </form>
+            </div>
+
+            
+
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Detalles del Pedido</h5>
+                    <p class="card-text" id="detalles-pedido">Cierra una cuenta para ver los detalles de un pedido</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
