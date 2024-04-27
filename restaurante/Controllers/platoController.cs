@@ -24,26 +24,7 @@ namespace restaurante.Controllers
             return View(await _context.plato.ToListAsync());
         }
 
-        // Acción para cambiar el estado del plato
-        [HttpPost]
-        public IActionResult CambiarEstado(int id)
-        {
-            // Buscar el plato en la base de datos por su ID
-            var plato = _context.plato.FirstOrDefault(p => p.id_Plato == id);
-
-            if (plato == null)
-            {
-                // Si el plato no se encuentra, devolver un error o realizar alguna otra acción
-                return NotFound();
-            }
-
-
-            //Guardar los cambios en la base de datos
-            _context.SaveChanges();
-
-            //Devolver una respuesta exitosa
-            return Ok();
-        }
+        
 
 
         // GET: plato/Details/5

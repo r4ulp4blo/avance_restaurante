@@ -16,13 +16,49 @@ namespace restaurante.Controllers
             _restauranteDbContext = restauranteDbContext;
         }
 
+        // Acción para cambiar el estado del pedido
+        [HttpPost]
+        public IActionResult CambiarEstado(int id)
+        {
+            // Buscar el detalle del pedido en la base de datos por su ID
+            var detallePedido = _restauranteDbContext.detallePedido.FirstOrDefault(d => d.id_Detalle == id);
+
+            if (detallePedido == null)
+            {
+                // Si el detalle del pedido no se encuentra, devolver un error o realizar alguna otra acción
+                return NotFound();
+            }
+
+            // Actualizar el estado del detalle del pedido
+            if (detallePedido.estado == "Solicitado")
+            {
+                detallePedido.estado = "Preparando";
+            }
+            else if (detallePedido.estado == "Preparando")
+            {
+                detallePedido.estado = "Finalizado";
+            }
+            else
+            {
+                // Si ya está finalizado, no se realiza ningún cambio
+                return Ok();
+            }
+
+            // Guardar los cambios en la base de datos
+            _restauranteDbContext.SaveChanges();
+
+            // Devolver una respuesta exitosa
+            return Ok();
+        }
+
+
         public IActionResult Index()
         {
-            var listadoDeMesas = (from m in _restauranteDbContext.mesa 
-                                  select new { 
-                                      id_Mesa = m.id_Mesa 
-                                  }).ToList();
-            ViewData["listadoDeMesas"] = listadoDeMesas;
+            //var listadoDeMesas = (from m in _restauranteDbContext.mesa 
+            //                      select new { 
+            //                          id_Mesa = m.id_Mesa 
+            //                      }).ToList();
+            //ViewData["listadoDeMesas"] = listadoDeMesas;
 
             // Obtener listado de pedidos por mesa
             var listadoDePedidosPorMesa = (from e in _restauranteDbContext.detallePedido
@@ -33,6 +69,7 @@ namespace restaurante.Controllers
                                                id_Mesa = g.Key,
                                                Pedidos = g.Select(pedido => new
                                                {
+                                                   id_Detalle = pedido.e.id_Detalle,
                                                    id_Plato = pedido.e.id_Plato,
                                                    precio =pedido.p.precio,
                                                    nombrePlato = pedido.p.nombre,
@@ -73,5 +110,7 @@ namespace restaurante.Controllers
 
             return View();
         }
+
+
     }
 }

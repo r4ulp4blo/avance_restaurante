@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using restaurante.Models;
+using restaurante.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<restauranteDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("restauranteDbConnection"));
 });
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -28,6 +31,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.MapHub<EstadoHub>("/estadoHub");
 
 app.MapControllerRoute(
     name: "default",
