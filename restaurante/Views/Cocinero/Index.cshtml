@@ -1,23 +1,37 @@
 ﻿<style>
     body {
         background-color: #332b28;
-        font-family: Helvetica, Arial, sans-serif; /* Utiliza la fuente Helvetica */
+        font-family: Helvetica, Arial, sans-serif; 
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-family: Helvetica, Arial, sans-serif; /* Cambia la fuente de todos los títulos */
+        font-family: Helvetica, Arial, sans-serif; 
     }
 
     p {
-        font-family: Helvetica, Arial, sans-serif; /* Cambia la fuente de todos los párrafos */
+        font-family: Helvetica, Arial, sans-serif; 
     }
 
     .btn {
         background-color: #7d726d;
         color: white;
         border: 1px solid #b7ada7;
-        font-family: Helvetica, Arial, sans-serif; /* Aplica la fuente Helvetica a los botones */
+        font-family: Helvetica, Arial, sans-serif; 
     }
+
+    .card-title {
+        background-color: #443e3b; 
+        color: #ffffff; 
+        padding: 10px; 
+        border-radius: 15px;
+        font-family: Courier, monospace;
+    }
+
+    .table td {
+        font-size: 16px; 
+    }
+
+
 </style>
 
 
@@ -31,7 +45,6 @@
     @foreach (var detallesmesa in (IEnumerable<dynamic>)ViewData["listadoDePedidosPorMesa"])
     {
         <div class="card mb-3 border-3" style="background-color: #b7ada7;">
-            <!-- Agrega la clase 'mb-3' para agregar margen inferior -->
             <div class="card-body">
                 <h5 class="card-title">Mesa @detallesmesa.id_Mesa</h5>
                 <div class = "text-center">
@@ -52,7 +65,7 @@
                                 {
                                     foreach (var detallepedido in pedidoPorMesa.Pedidos)
                                     {
-
+                                        
                                         <tr>
                                             <td><div class="mr-2">@detallepedido.nombrePlato</div></td>
                                             <td><div class="mr-2">@detallepedido.Comentarios</div></td>
@@ -60,8 +73,8 @@
                                             <td class="estado" data-id="@detallepedido.id_Detalle">@detallepedido.estado</td>
 
                                             <td>
-                                                <div class="mr-2"></div> <!-- Espacio -->
-                                                <button type="button" class="btn" onclick="cambiarEstado('@detallepedido.id_Detalle', '@detallepedido.estado')">Cambiar Estado</button>
+                                                <div class="mr-2"></div>
+                                                <button type="button" class="btn" onclick="cambiarEstado('@detallepedido.id_Detalle', '@detallepedido.estado'); location.reload();">Cambiar Estado</button>
 
 
 
@@ -71,7 +84,7 @@
                                     }
                                 }
                             }
-                            <!-- Agrega más filas según sea necesario -->
+                           
                         </tbody>
                     </table>
 
@@ -90,13 +103,16 @@
                 data: { id: idDetalle },
                 success: function (response) {
                     if (response.success) {
-                        // actualizar el estado 
+                        // actualizar el estado
                         if (estadoActual == "Solicitado") {
                             $('button[data-id="' + idDetalle + '"]').text("Preparando");
+                            
                         } else if (estadoActual == "Preparando") {
                             $('button[data-id="' + idDetalle + '"]').text("Finalizado");
+                            
                         }
                         document.getElementById("estado-" + idDetalle).innerText = nuevoEstado;
+                        
 
                     }
                 },
@@ -106,7 +122,9 @@
             });
         }
 
+
     </script>
+@*     intento de uso de signalR *@   
     <script>
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/estadoHub") // Especifica la URL del hub
